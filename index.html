@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+       
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h5 class="col s6 offset-s3 center-align" id="updatedText"></h5>
+        </div>
+        <div class="row">
+            <table>
+                <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>National</th>
+                    <th>Central</th>
+                    <th>West</th>
+                    <th>East</th>
+                    <th>North</th>
+                    <th>South</th>
+                </tr>
+                </thead>
+    
+                <tbody> 
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+    <script>
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.data.gov.sg/v1/environment/psi",
+            "method": "GET"
+        }
+
+        $.ajax(settings).done(function (response) {
+            epoch=Date.parse(response.items[0].update_timestamp);
+            var date = new Date(epoch);
+            var readableString = date.toLocaleString()
+
+            $("#updatedText").text("Lasted updated at - "+readableString);
+
+            readings = response.items[0].readings;
+
+            for (var key in readings) {
+                if (readings.hasOwnProperty(key)) {
+                    tableRows = 
+                    "<tr><td>"+key+"</td><td>"+readings[key]["national"]+"</td><td>"+readings[key]["central"]+"</td><td>"+readings[key]["west"]+"</td><td>"+readings[key]["east"]+"</td><td>"+readings[key]["north"]+"</td><td>"+readings[key]["south"]+"</td></tr>";
+                    tableBody = $("table tbody");
+                    tableBody.append(tableRows);
+                }
+            }
+        });
+    </script>
+
+</html>
